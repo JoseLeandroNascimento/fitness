@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FitnessTracker</string>
+    <string name="app_name">Fitness Tracker</string>
     <string name="imc">IMC</string>
     <string name="tmb">TMB</string>
     <string name="weight">peso (kg)</string>
