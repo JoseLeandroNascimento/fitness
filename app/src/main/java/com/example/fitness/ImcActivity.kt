@@ -1,6 +1,7 @@
 package com.example.fitness
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -36,8 +37,20 @@ class ImcActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            val weight = editWeight.text.toString().toInt()
+            val height = editHeight.text.toString().toInt()
+
+            val result = calculateImc(weight,height)
+
+            Log.d("teste","resultado: "+result)
+
         }
 
+    }
+
+    private fun calculateImc(weight: Int, height: Int): Double {
+
+        return weight / ((height / 100.0) * (height / 100.0))
     }
 
     private fun validate(): Boolean {
