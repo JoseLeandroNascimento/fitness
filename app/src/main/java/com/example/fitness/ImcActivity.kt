@@ -1,11 +1,12 @@
 package com.example.fitness
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -40,10 +41,35 @@ class ImcActivity : AppCompatActivity() {
             val weight = editWeight.text.toString().toInt()
             val height = editHeight.text.toString().toInt()
 
-            val result = calculateImc(weight,height)
+            val result = calculateImc(weight, height)
 
-            Log.d("teste","resultado: "+result)
+            val imcResponseId = imcResponse(result)
 
+            AlertDialog.Builder(this)
+                .setTitle(getString(R.string.imc_response, result))
+                .setMessage(imcResponseId)
+                .setPositiveButton(
+                    android.R.string.ok
+                ) { dialog, which -> }
+                .create()
+                .show()
+
+        }
+
+    }
+
+    @StringRes
+    private fun imcResponse(imc: Double): Int {
+
+        return when {
+            imc < 15.0 -> R.string.imc_severely_low_weight
+            imc < 16.0 -> R.string.imc_very_low_weight
+            imc < 18.5 -> R.string.imc_low_weight
+            imc < 25.0 -> R.string.normal
+            imc < 30.0 -> R.string.imc_high_weight
+            imc < 35.0 -> R.string.imc_so_high_weight
+            imc < 40.0 -> R.string.imc_severely_high_weight
+            else -> R.string.imc_extreme_weight
         }
 
     }
