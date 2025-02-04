@@ -1,13 +1,18 @@
 package com.example.fitness
 
+import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
@@ -25,16 +30,50 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        val adapter = MainAdapter()
+        val mainItem = mutableListOf<MainItem>()
+
+        mainItem.add(
+            MainItem(
+                id = 1,
+                drawableId = R.drawable.baseline_visibility_24,
+                textStringId = R.string.imc,
+                color = Color.YELLOW
+            ),
+        )
+
+        mainItem.add(
+            MainItem(
+                id = 2,
+                drawableId = R.drawable.baseline_visibility_24,
+                textStringId = R.string.imc,
+                color = Color.YELLOW
+            ),
+        )
+
+        val adapter = MainAdapter(mainItem) {
+            when (it) {
+                1 -> {
+                    val intent = Intent(this@MainActivity, ImcActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+        }
+
 
         rvMain = findViewById(R.id.rv_main)
         rvMain.adapter = adapter
-        rvMain.layoutManager = LinearLayoutManager(this)
+        rvMain.layoutManager = GridLayoutManager(this, 2)
 
 
     }
 
-    private inner class MainAdapter : RecyclerView.Adapter<MainViewHolder>() {
+
+    private inner class MainAdapter(
+        private val mainItems: List<MainItem>,
+        private val onItemClickListener: (Int) -> Unit
+
+    ) : RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
+
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
             val view = layoutInflater.inflate(R.layout.main_item, parent, false)
@@ -42,15 +81,35 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun getItemCount(): Int {
-            return 30
+            return mainItems.size
         }
 
         override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
+            val itemCurrent = mainItems[position]
+            holder.bind(itemCurrent)
+        }
+
+        inner class MainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+            fun bind(item: MainItem) {
+                val img: ImageView = itemView.findViewById(R.id.item_img_icon)
+                val name: TextView = itemView.findViewById(R.id.item_txt_name)
+                val container: LinearLayout = itemView.findViewById(R.id.container_imc)
+
+                img.setImageResource(item.drawableId)
+                name.setText(item.textStringId)
+                container.setBackgroundColor(item.color)
+
+                container.setOnClickListener {
+
+                    onItemClickListener.invoke(item.id)
+
+                }
+            }
+
         }
 
     }
 
-    private class MainViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-    }
 }
