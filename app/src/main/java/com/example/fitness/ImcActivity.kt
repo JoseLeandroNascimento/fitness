@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.fitness.models.Calc
 
 class ImcActivity : AppCompatActivity() {
 
@@ -53,10 +54,23 @@ class ImcActivity : AppCompatActivity() {
                 .setPositiveButton(
                     android.R.string.ok
                 ) { dialog, which -> }
+                .setNegativeButton(R.string.save) { dialog, which ->
+
+                    Thread {
+                        val app = (application as App)
+                        val dao = app.db.calcDao()
+                        dao.insert(Calc(type = "imc", res = result))
+
+                        runOnUiThread {
+                            Toast.makeText(this@ImcActivity,R.string.calc_saved,Toast.LENGTH_LONG).show()
+                        }
+                    }.start()
+
+                }
                 .show()
 
             val service = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            service.hideSoftInputFromWindow(currentFocus?.windowToken,0)
+            service.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
 
         }
 
