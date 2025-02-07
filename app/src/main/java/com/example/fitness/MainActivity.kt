@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
             MainItem(
                 id = 2,
                 drawableId = R.drawable.baseline_visibility_24,
-                textStringId = R.string.imc,
+                textStringId = R.string.tmb,
                 color = Color.YELLOW
             ),
         )
@@ -54,6 +54,10 @@ class MainActivity : AppCompatActivity() {
             when (it) {
                 1 -> {
                     val intent = Intent(this@MainActivity, ImcActivity::class.java)
+                    startActivity(intent)
+                }
+                2->{
+                    val intent = Intent(this@MainActivity, TmbActivity::class.java)
                     startActivity(intent)
                 }
             }
